@@ -88,12 +88,12 @@ $RECYCLE.BIN/
 *.suo
 *.tss
 *.DotSettings
-*/packages/*
+packages/*
 
 # Result files
 *.dll
 *.exe
 *.pdb
-*/*/bin
-*/*/obj
+*/bin
+*/obj
 Arcade Corsa/Publish/*

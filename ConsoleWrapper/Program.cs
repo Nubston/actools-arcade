@@ -251,7 +251,7 @@ namespace ConsoleWrapper {
                     throw new ArgumentOutOfRangeException();
             }
         }
-
+        
         public static int Main(string[] args) {
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
             CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
