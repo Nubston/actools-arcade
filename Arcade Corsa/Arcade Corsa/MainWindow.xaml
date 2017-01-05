@@ -1,0 +1,273 @@
+﻿<mui:ModernWindow x:Class="ArcadeCorsa.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ar="clr-namespace:ArcadeCorsa" xmlns:c="http://acstuff.ru/app/controls" xmlns:t="http://acstuff.ru/app/tools" mc:Ignorable="d"
+        Title="Arcade Corsa" BackButtonVisibility="Collapsed" d:DataContext="{d:DesignInstance ar:MainWindow+ViewModel}" Loaded="OnLoaded" Unloaded="OnUnloaded"
+        IsTitleVisible="False" KeyDown="OnKeyDown" x:Name="This" ResizeMode="NoResize" WindowState="Maximized" MouseMove="Scene_OnMouseMove"
+        MouseUp="Scene_OnMouseUp">
+    <mui:ModernWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <mui:SharedResourceDictionary Source="/AcManager.Controls;component/assets/acspecific.xaml" />
+                <mui:SharedResourceDictionary Source="/FirstFloor.ModernUI;component/assets/converters.xaml" />
+                <mui:SharedResourceDictionary Source="/FirstFloor.ModernUI;component/assets/listbox.xaml" />
+                <mui:SharedResourceDictionary Source="/FirstFloor.ModernUI;component/assets/textblock.xaml" />
+                <mui:SharedResourceDictionary Source="/FirstFloor.ModernUI;component/assets/bettertextbox.xaml" />
+                <mui:SharedResourceDictionary Source="/FirstFloor.ModernUI;component/assets/modernprogressring.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style TargetType="{x:Type ar:BlurredPiece}">
+                <Setter Property="BlurRadius" Value="30" />
+                <Setter Property="Background" Value="#44000000" />
+                <Setter Property="EffectEnabled" Value="{DynamicResource EffectsEnabled}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ar:BlurredPiece}">
+                            <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}"
+                                    Background="{TemplateBinding Background}" />
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="EffectEnabled" Value="True">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ar:BlurredPiece}">
+                                    <mui:Cell ClipToBounds="True">
+                                        <Border Margin="{TemplateBinding InnerMargin}">
+                                            <FrameworkElement.Effect>
+                                                <BlurEffect Radius="{Binding BlurRadius, RelativeSource={RelativeSource TemplatedParent}}" RenderingBias="Performance"
+                                                        KernelType="Gaussian" />
+                                            </FrameworkElement.Effect>
+                                            <Border.Background>
+                                                <VisualBrush Visual="{Binding Visual, RelativeSource={RelativeSource TemplatedParent}}" Stretch="None" TileMode="None"
+                                                        ViewboxUnits="Absolute" Viewbox="{Binding Viewbox, RelativeSource={RelativeSource TemplatedParent}}" />
+                                            </Border.Background>
+                                        </Border>
+                                        <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}"
+                                                Background="{TemplateBinding Background}" />
+                                    </mui:Cell>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>   
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+    </mui:ModernWindow.Resources>
+    <!--  -->
+    <mui:ModernWindow.AdditionalContent>
+        <mui:Cell>
+            <mui:Cell.Resources>
+                <ResourceDictionary>
+                    <SolidColorBrush x:Key="ButtonBackground" Color="Transparent" />
+                </ResourceDictionary>
+            </mui:Cell.Resources>
+
+            <Image x:Name="Scene" Stretch="Fill" MouseDown="Scene_OnMouseDown" ar:VisibilityAnimation.Visible="True" />
+
+            <!--loading thing-->
+            <mui:ModernProgressRing Style="{StaticResource ChasingDotsProgressRingStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="80"
+                    Height="80" IsActive="True" ar:VisibilityAnimation.Visible="{Binding IsBusy}" ar:VisibilityAnimation.Duration="0:0:0.1"
+                    Effect="{DynamicResource ShadowEffect}" />
+
+            <!--main controls-->
+            <mui:Cell Margin="100 40" ar:VisibilityAnimation.Visible="{Binding Renderer.SetCameraHigher}">
+                <!--best times-->
+                <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right"
+                        Visibility="{Binding LapTimes.Count, Converter={StaticResource MoreToVisibilityConverter}}">
+                    <TextBlock Text="Best times:" />
+                    <ItemsControl ItemsSource="{Binding LapTimes}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel Margin="0 4 0 0">
+                                    <Ellipse Width="8" Height="8" Fill="{Binding Place, Converter={StaticResource PlaceToColorConverter}}" DockPanel.Dock="Left"
+                                            Margin="0 0 8 0" VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding Name}" FontSize="10" DockPanel.Dock="Top" Margin="0 0 0 2" />
+                                    <TextBlock Text="{Binding Time, StringFormat='{}{0:mm}:{0:ss}:{0:fff}'}" Style="{StaticResource Label}" FontSize="8" />
+                                </DockPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+
+                <!--settings, information-->
+                <mui:Cell Height="32" Width="32" VerticalAlignment="Bottom" HorizontalAlignment="Left" Effect="{DynamicResource ShadowEffect}">
+                    <ar:BlurredPiece Visual="{Binding SceneVisual, ElementName=This}" />
+                    <ToggleButton x:Name="Information" BorderThickness="0" Padding="0">
+                        <Path Stretch="Uniform" Width="12" Height="12" Fill="White"
+                                Data="F1 M 31.6666,30.0834L 42.7499,30.0834L 42.7499,33.2501L 42.7499,52.2501L 45.9165,52.2501L 45.9165,57.0001L 31.6666,57.0001L 31.6666,52.2501L 34.8332,52.2501L 34.8332,34.8335L 31.6666,34.8335L 31.6666,30.0834 Z M 38.7917,19C 40.9778,19 42.75,20.7722 42.75,22.9583C 42.75,25.1445 40.9778,26.9167 38.7917,26.9167C 36.6055,26.9167 34.8333,25.1445 34.8333,22.9583C 34.8333,20.7722 36.6055,19 38.7917,19 Z " />
+                    </ToggleButton>
+                </mui:Cell>
+
+                <!--about, settings-->
+                <mui:Cell Width="500" HorizontalAlignment="Center" VerticalAlignment="Center"
+                        ar:VisibilityAnimation.Visible="{Binding IsChecked, ElementName=Information}" Effect="{DynamicResource ShadowEffect}">
+                    <ar:BlurredPiece Visual="{Binding SceneVisual, ElementName=This}" />
+
+                    <mui:SpacingStackPanel Spacing="4" Margin="20 8">
+                        <DockPanel>
+                            <Image Source="/Assets/Icon.ico" Width="27" Height="27" DockPanel.Dock="Left" Margin="0 0 12 0" />
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource Heading1}" FontSize="20" Margin="-2 0 0 0" Text="Arcade Corsa" />
+                                <mui:BbCodeBlock Style="{StaticResource Small}" FontSize="8">Small experimental “spin-off” from [url="http://acstuff.ru/app/"]Content Manager[/url] for testing DX11-in-WPF integration as well as possibility to make another apps based on CM’s libraries</mui:BbCodeBlock>
+                            </StackPanel>
+                        </DockPanel>
+
+                        <mui:BbCodeBlock Style="{StaticResource Small}" FontSize="8">Icon made by [url="http://www.flaticon.com/free-icon/racing_263396"]Freepik[/url]. For more details and copyright information, please, check CM’s about page. And, by the way, you can move camera around if you hold Alt.</mui:BbCodeBlock>
+
+                        <c:PropertiesGrid Columns="1" Width="300" Spacing="4" Margin="0 20" HorizontalAlignment="Left" LabelWidth="120" LabelFontWeight="Light">
+                            <ComboBox c:PropertiesGrid.Label="Starter:" DataContext="{x:Static t:SettingsHolder.Drive}" ItemsSource="{Binding StarterTypes}"
+                                    SelectedItem="{Binding SelectedStarterType}" DisplayMemberPath="DisplayName">
+                                <ComboBox.ItemContainerStyle>
+                                    <Style TargetType="ComboBoxItem" BasedOn="{StaticResource {x:Type ComboBoxItem}}">
+                                        <Setter Property="IsEnabled" Value="{Binding IsAvailable}" />
+                                        <Setter Property="ToolTip" Value="{Binding Description}" />
+                                    </Style>
+                                </ComboBox.ItemContainerStyle>
+                            </ComboBox>
+                            <mui:LabeledToggleButton c:PropertiesGrid.Label="Rendering quality:" LabelChecked="High" LabelUnchecked="Normal"
+                                    IsChecked="{Binding BestQuality, ElementName=This}" />
+                            <mui:LabeledToggleButton c:PropertiesGrid.Label="Car lights:" LabelChecked="Enabled" LabelUnchecked="Disabled"
+                                    IsChecked="{Binding Renderer.CarLightsEnabled}" Checked="ToggleButton_OnChecked" Unchecked="ToggleButton_OnChecked" />
+                        </c:PropertiesGrid>
+                    </mui:SpacingStackPanel>
+                </mui:Cell>
+
+                <!--car selection and information-->
+                <StackPanel Width="300" HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                        ar:VisibilityAnimation.Visible="{Binding IsChecked, ElementName=Information, Converter={StaticResource InvertBooleanConverter}}">
+                    <mui:SpacingUniformGrid Rows="1" HorizontalSpacing="8">
+                        <!--"specs"-->
+                        <c:PropertiesGrid Spacing="16" Columns="1" LabelWidth="90" VerticalAlignment="Bottom">
+                            <c:PropertiesGrid.RenderTransform>
+                                <ScaleTransform ScaleX="0.7" ScaleY="0.7" />
+                            </c:PropertiesGrid.RenderTransform>
+                            <ProgressBar c:PropertiesGrid.Label="Acceleration:" Maximum="1" Value="{Binding AccelerationValue}" Height="4"
+                                    ToolTip="{Binding Car.SpecsAcceleration}"
+                                    IsEnabled="{Binding AccelerationValue, Converter={StaticResource NullToBooleanConverter}, ConverterParameter=inverse}" />
+                            <ProgressBar c:PropertiesGrid.Label="Top Speed:" Maximum="1" Value="{Binding TopSpeedValue}" Height="4"
+                                    ToolTip="{Binding Car.SpecsTopSpeed}" />
+                            <ProgressBar c:PropertiesGrid.Label="Handling:" Maximum="1" Value="{Binding HandlingValue}" Height="4" ToolTip="{Binding Tyres}" />
+                        </c:PropertiesGrid>
+
+                        <!--skins-->
+                        <ListBox ItemsSource="{Binding CustomColors}" SelectedItem="{Binding CustomColor, Mode=TwoWay}" Background="Transparent"
+                                VirtualizingPanel.ScrollUnit="Pixel" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.IsVirtualizing="True"
+                                Height="42" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0 0 0 8">
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem" BasedOn="{StaticResource FlatListBoxItem}">
+                                    <Setter Property="Padding" Value="2" />
+                                    <Setter Property="Margin" Value="-1" />
+                                    <Style.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Panel.ZIndex" Value="1" />
+                                        </Trigger>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Panel.ZIndex" Value="2" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <mui:VirtualizingTilePanel ItemWidth="10" ItemHeight="10" Orientation="Horizontal" CacheLength="0,0" Margin="2" />
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate DataType="{x:Type SolidColorBrush}">
+                                    <Rectangle Fill="{Binding}" Width="10" Height="10" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                        <!--<StackPanel>
+                            <DockPanel Visibility="{Binding Renderer.LicensePlateSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <Label Content="License plate:" Target="{Binding ElementName=LicensePlateTextBox}" Width="90" DockPanel.Dock="Left"
+                                        VerticalAlignment="Center" />
+                                <mui:BetterTextBox x:Name="LicensePlateTextBox" Style="{StaticResource Borderless}" Placeholder="?"
+                                        Text="{Binding LicensePlateText}" />
+                            </DockPanel>
+
+                            <ListBox ItemsSource="{Binding Car.SkinsActualList}" SelectedItem="{Binding CarSkin, Mode=TwoWay}" Background="Transparent"
+                                    VirtualizingPanel.ScrollUnit="Pixel" VirtualizingPanel.VirtualizationMode="Recycling"
+                                    VirtualizingPanel.IsVirtualizing="True">
+                                <i:Interaction.Behaviors>
+                                    <mui:HorizontalScrollBehavior />
+                                </i:Interaction.Behaviors>
+                                <ListBox.Template>
+                                    <ControlTemplate TargetType="ListBox">
+                                        <ScrollViewer Padding="{TemplateBinding Padding}" Focusable="False" HorizontalScrollBarVisibility="Hidden"
+                                                VerticalScrollBarVisibility="Disabled" CanContentScroll="True">
+                                            <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                        </ScrollViewer>
+                                    </ControlTemplate>
+                                </ListBox.Template>
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <VirtualizingStackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type t:CarSkinObject}">
+                                        <Image ToolTip="{Binding DisplayName}" Width="13" Height="13"
+                                                Source="{Binding LiveryImage, Converter={StaticResource UriToCachedImageConverter}, IsAsync=True}" />
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>-->
+                    </mui:SpacingUniformGrid>
+
+                    <!--selection-->
+                    <mui:Cell Effect="{DynamicResource ShadowEffect}">
+                        <ar:BlurredPiece Visual="{Binding SceneVisual, ElementName=This}" />
+                        <DockPanel>
+                            <Button DockPanel.Dock="Left" Content="←" Command="{Binding PreviousCarCommand}" BorderThickness="0" />
+                            <Button DockPanel.Dock="Right" Content="→" Command="{Binding NextCarCommand}" BorderThickness="0" />
+                            <TextBlock Text="{Binding Car.DisplayName}" TextAlignment="Center" Padding="20 8" Background="{DynamicResource ButtonBackground}"
+                                    Foreground="{DynamicResource ButtonText}" />
+                        </DockPanel>
+                    </mui:Cell>
+                </StackPanel>
+
+                <!--go button-->
+                <mui:BooleanSwitch Value="{Binding Stats}" HorizontalAlignment="Right" ResetElementNameBindings="True" VerticalAlignment="Bottom">
+                    <mui:BooleanSwitch.True>
+                        <mui:SpacingStackPanel Spacing="4" HorizontalAlignment="Right">
+                            <TextBlock Text="{Binding Renderer.FramesPerSecond, StringFormat='{}FPS: {0:F0}'}" />
+                            <CheckBox IsChecked="{Binding BestQuality, ElementName=This}" Content="Best quality" />
+                        </mui:SpacingStackPanel>
+                    </mui:BooleanSwitch.True>
+                    <mui:BooleanSwitch.False>
+                        <mui:Cell Height="32" Width="64" VerticalAlignment="Bottom" Effect="{DynamicResource ShadowEffect}">
+                            <ar:BlurredPiece Visual="{Binding SceneVisual, ElementName=This}" />
+                            <Button Content="Race!" Command="{Binding GoCommand}" BorderThickness="0" />
+                        </mui:Cell>
+                    </mui:BooleanSwitch.False>
+                </mui:BooleanSwitch>
+            </mui:Cell>
+
+            <!--game loading-->
+            <DockPanel x:Name="LoadingPanel" ar:VisibilityAnimation.Visible="False" HorizontalAlignment="Center" VerticalAlignment="Center" Width="400"
+                    Height="120">
+                <!--i’m already a bit tired of this “spin-off”, so no more bindings, just stupid names-->
+                <mui:ModernProgressRing x:Name="ProgressBar" DockPanel.Dock="Top" Style="{StaticResource WaveProgressRingStyle}" HorizontalAlignment="Center"
+                        VerticalAlignment="Center" Width="80" Height="80" IsActive="True" ar:VisibilityAnimation.Duration="0:0:0.1" Visibility="Collapsed"
+                        Effect="{DynamicResource ShadowEffect}" />
+
+                <mui:Cell x:Name="GameResultOk" DockPanel.Dock="Bottom" Height="32" Effect="{DynamicResource ShadowEffect}">
+                    <ar:BlurredPiece Visual="{Binding SceneVisual, ElementName=This}" />
+                    <Button Content="OK" Click="GameResultOk_OnClick" BorderThickness="0" />
+                </mui:Cell>
+
+                <DockPanel x:Name="PlayerNamePanel" Margin="0 20" DockPanel.Dock="Bottom" HorizontalAlignment="Center" Effect="{DynamicResource ShadowEffect}">
+                    <Label Content="Your name:" DockPanel.Dock="Left" Margin="0 0 8 0" FontSize="16" />
+                    <mui:BetterTextBox x:Name="PlayerName" Text="Player" Style="{StaticResource Borderless.Label}" FontSize="16" MaxLength="8" Width="60" />
+                </DockPanel>
+
+                <TextBlock x:Name="LoadingText" Style="{StaticResource Heading1}" TextWrapping="Wrap" TextAlignment="Center"
+                        Effect="{DynamicResource ShadowEffect}" />
+            </DockPanel>
+        </mui:Cell>
+    </mui:ModernWindow.AdditionalContent>
+</mui:ModernWindow>

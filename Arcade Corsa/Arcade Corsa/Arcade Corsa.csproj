@@ -1,0 +1,181 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{71321087-72E5-4E12-9DDB-C0346C9591F2}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ArcadeCorsa</RootNamespace>
+    <AssemblyName>Arcade Corsa</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>ArcadeCorsa.EntryPoint</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Assets\Icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AcManager.Controls">
+      <HintPath>..\Libraries\AcManager.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="AcManager.Tools">
+      <HintPath>..\Libraries\AcManager.Tools.dll</HintPath>
+    </Reference>
+    <Reference Include="AcTools">
+      <HintPath>..\Libraries\AcTools.dll</HintPath>
+    </Reference>
+    <Reference Include="AcTools.Render">
+      <HintPath>..\Libraries\AcTools.Render.dll</HintPath>
+    </Reference>
+    <Reference Include="FirstFloor.ModernUI">
+      <HintPath>..\Libraries\FirstFloor.ModernUI.dll</HintPath>
+    </Reference>
+    <Reference Include="SlimDX">
+      <HintPath>..\Libraries\SlimDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SpriteTextRenderer">
+      <HintPath>..\Libraries\SpriteTextRenderer.dll</HintPath>
+    </Reference>
+    <Reference Include="SpriteTextRenderer.SlimDX">
+      <HintPath>..\Libraries\SpriteTextRenderer.SlimDX.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\Libraries\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Interop.D3DImageEx, Version=1.0.6207.42023, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libraries\Interop.D3DImageEx.dll</HintPath>
+    </Reference>
+    <Reference Include="JetBrains.Annotations, Version=10.2.1.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.10.2.1\lib\net\JetBrains.Annotations.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Magick.NET-x86">
+      <HintPath>..\Libraries\Magick.NET-x86.dll</HintPath>
+    </Reference>
+    <Reference Include="OxyPlot">
+      <HintPath>..\Libraries\OxyPlot.dll</HintPath>
+    </Reference>
+    <Reference Include="OxyPlot.Wpf">
+      <HintPath>..\Libraries\OxyPlot.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="StringBasedFilter">
+      <HintPath>..\Libraries\StringBasedFilter.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="BlurredPiece.cs" />
+    <Compile Include="MainWindow.Storage.cs" />
+    <Compile Include="MainWindow.GameUi.cs" />
+    <Compile Include="ColorsPalette.cs" />
+    <Compile Include="Render\DarkRenderer\DarkKn5ObjectRenderer.cs" />
+    <Compile Include="Render\DarkRenderer\DarkKn5ObjectRenderer.Paintshop.cs" />
+    <Compile Include="Render\DarkRenderer\FlatMirror.cs" />
+    <Compile Include="Render\DarkRenderer\Materials\AmbientShadowMaterialSimple.cs" />
+    <Compile Include="Render\DarkRenderer\Materials\FlatMirrorMaterialSimple.cs" />
+    <Compile Include="Render\DarkRenderer\Materials\Kn5MaterialSimple.cs" />
+    <Compile Include="Render\DarkRenderer\Materials\Kn5MaterialSimpleAlpha.cs" />
+    <Compile Include="Render\DarkRenderer\Materials\Kn5MaterialSimpleAtNm.cs" />
+    <Compile Include="Render\DarkRenderer\Materials\Kn5MaterialSimpleBase.cs" />
+    <Compile Include="Render\DarkRenderer\Materials\Kn5MaterialSimpleDiffMaps.cs" />
+    <Compile Include="Render\DarkRenderer\Materials\Kn5MaterialSimpleGl.cs" />
+    <Compile Include="Render\DarkRenderer\Materials\Kn5MaterialSimpleMaps.cs" />
+    <Compile Include="Render\DarkRenderer\Materials\Kn5MaterialSimpleMirror.cs" />
+    <Compile Include="Render\DarkRenderer\Materials\Kn5MaterialSimpleNm.cs" />
+    <Compile Include="Render\DarkRenderer\Materials\Kn5MaterialSimpleNmMult.cs" />
+    <Compile Include="Render\DarkRenderer\Materials\Kn5MaterialSimpleReflective.cs" />
+    <Compile Include="Render\DarkRenderer\Materials\MaterialsProviderSimple.cs" />
+    <Compile Include="Render\Shaders\Shaders.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Shaders.tt</DependentUpon>
+    </Compile>
+    <Compile Include="VisibilityAnimation.cs" />
+    <Page Include="Assets\Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Icon.ico" />
+    <Content Include="Render\Shaders\Dark\DarkMaterial.fx" />
+    <Content Include="Render\Shaders\Includes\Shadows.fx" />
+    <Content Include="Render\Shaders\Includes\Common.fx" />
+    <Content Include="Render\Shaders\Shaders.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Shaders.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Shaders.resources" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>cd "$(ProjectDir)\Render\Shaders" &amp; zsh -c "~/bin/t4auto Shaders.tt *(F)"</PreBuildEvent>
+  </PropertyGroup>
+</Project>

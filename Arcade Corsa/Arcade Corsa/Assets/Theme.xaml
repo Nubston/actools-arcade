@@ -1,0 +1,11 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/FirstFloor.ModernUI;component/Assets/ModernUI.Dark.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <Color x:Key="GoColor">#144FB3</Color>
+    <Color x:Key="AccentColor">#51AB92</Color>
+    <Color x:Key="WindowBackgroundColor">#000000</Color>
+    <Rectangle x:Key="WindowBackgroundContent" x:Shared="False" />
+    <Rectangle x:Key="DialogBackgroundContent" x:Shared="False" />
+</ResourceDictionary>
